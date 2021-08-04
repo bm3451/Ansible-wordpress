@@ -1,0 +1,32 @@
+- name: Install Apache2 Package
+  apt:
+    name: apache2, php, php-mysql, php-gd, php-mbstring
+    state: present
+  when: ansible_facts['os_family'] == "Debian"
+- name: Install Httpd Package
+  yum:
+    name: httpd, php, php-mysql, php-gd, php-mbstring
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
+- name: Changing Apache Ports
+  template:
+    src: ports.conf
+    dest: /etc/apache2/ports.conf
+  notify:
+  - Restart apache
+- name: Starting Apache2 Service
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+- name: Check Web Service
+  uri:
+    url: http://192.168.200.101:8080/wordpress
+    status_code: 200
+  delegate_to: 192.168.200.100
+  handlers:
+    - name: Restart apache
+      service:
+        name: apache2
+        state: restarted
+

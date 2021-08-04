@@ -1,0 +1,5 @@
+- name: Config wordpress
+  hosts: webserver
+  roles:
+  - apache
+  - db

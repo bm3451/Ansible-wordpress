@@ -1,0 +1,5 @@
+- name: Install package
+    apt:
+      name: "{{ list_of_package }}"
+    notify:
+      - restart service
